@@ -1,0 +1,272 @@
+<!DOCTYPE html> 
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>亿突首页</title>
+<!-- 	<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+ -->		
+   <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <meta name="keywords" content="Scott Jeremy" />
+    <style>
+    	.header{
+    		background-color:#f2f2f2;
+    		width:100%;
+    		margin-bottom: 20px;
+    	}
+    	.header ul{
+    		padding:0 150px;
+    	    height:100px;
+    	}
+    	.header ul li{
+    		line-height: 100px;
+             }   
+         .middle-body{
+           padding:0 80px;
+         } 
+         .type-name{
+         	color:#333;
+         	font-size: 1.1em;
+         }	
+         .type-name:hover{
+         	color:#333;
+            cursor: auto;
+         	text-decoration:underline;
+         }
+         .main-link a{
+           margin-left:10px;
+         }
+         .recommend-features{
+         	 padding:0 80px;
+         }
+         <!--商品-->
+          .goods{
+          	border: #f2f2f2 solid 1px;
+          }
+          .goodslist{
+          	list-style-type: none;
+          }
+          .goodslist li {
+          	display: inline-block;
+          	width:110px;
+          	height: 135px;
+          	margin:10px 20px ;
+          }
+    </style>
+</head>
+
+<body>
+    <div name="header" class="container header" >
+     	<ul class="nav nav-pills ">
+     	  <li>
+     	  	<img width="50px" height="50px"  class="img-thumbnail" src="img/public/myhead.jpg" alt="亿突,你的青春"/>
+     	  </li>    
+		  <li ><a href="#"><span class="text-center">关于亿突</span></a></li> 
+		  <li ><a href="#">当一回卖家</a></li>  
+		  <li ><a href="#">当买家ai</a></li>     
+		</ul>
+    <% if(user.username){%>
+           <span>欢迎你：<%= user.username %></span>
+           <a href="/logout">登出</a>  
+           <a href="/user/center">个人中心</a>
+    <%}else{%>
+           <a href="/login">登录</a> 
+          <a href="/register">注册</a>   
+    <%}%>
+    </div>
+    <div name="middle-body" class="middle-body clearfix"> 
+       <div name="main-type" class="col-md-3">
+       	<ul class="list-group">
+       		<li class="list-group-item">
+       			 <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+       			 <a href="#" target="_blank" class="type-name">数码</a>
+       			 <span class="main-link">
+       			 	 <a href="/goods/displaylist手机" target="_blank">手机</a>
+       			 	 <a href="/goods/displaylist相机" target="_blank">相机</a>
+       			 	 <a href="/goods/displaylist笔记本" target="_blank">笔记本</a>
+       			 </span>
+       		</li> 
+       		<li class="list-group-item">
+       			 <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+       			 <a href="#" target="_blank" class="type-name">衣物</a>
+       			 <span class="main-link">
+       			 	 <a href="#" target="_blank">鞋子</a>
+       			 	 <a href="#" target="_blank">衣服</a>
+       			 	 <a href="#" target="_blank">背包</a>
+       			 </span>
+       		</li> 
+       		<li class="list-group-item">
+       			 <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+       			 <a href="#" target="_blank" class="type-name">文具</a>
+       			 <span class="main-link">
+       			 	 <a href="#" target="_blank">本子</a>
+       			 	 <a href="#" target="_blank">笔</a>
+       			 	 <a href="#" target="_blank">笔记本</a>
+       			 </span>
+       		</li> 
+       		<li class="list-group-item">
+       			 <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+       			 <a href="#" target="_blank" class="type-name">知识</a>
+       			 <span class="main-link">
+       			 	 <a href="#" target="_blank">高数</a>
+       			 	 <a href="#" target="_blank">英语</a>
+       			 	 <a href="#" target="_blank">物理</a>
+       			 </span>
+       		</li> 
+       		<li class="list-group-item">
+       			 <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+       			 <a href="#" target="_blank" class="type-name">宠物</a>
+       			 <span class="main-link">
+       			 	 <a href="#" target="_blank">小狗</a>
+       			 	 <a href="#" target="_blank">小猫</a>
+       			 	 <a href="#" target="_blank">蜥蜴</a>
+       			 </span>
+       		</li> 
+       	</ul>
+       </div>
+       <div id="carousel-example-generic" class="carousel slide col-md-6" data-ride="carousel">
+				<!-- Indicators -->
+				<ol class="carousel-indicators">
+				<li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+				<li data-target="#carousel-example-generic" data-slide-to="1"></li>
+				<li data-target="#carousel-example-generic" data-slide-to="2"></li>
+				</ol>
+
+				<!-- Wrapper for slides -->
+				<div class="carousel-inner" role="listbox">
+					<div class="item active">
+					  <img src="img/public/lunbo2.jpg" alt="真的放不下" width="200px" height="200px"/>
+					</div>
+				    <div class="item">
+					  <img src="img/public/lunbo2.jpg" alt="搞基吧，以后" width="200px" height="200px"/>
+					</div>
+				    <div class="item">
+					  <img src="img/public/lunbo2.jpg" alt="搞基吧，以后" width="200px" height="200px"/>
+					</div>
+				</div>
+
+				<!-- Controls -->
+				<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+				<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+				<span class="sr-only">Previous</span>
+				</a>
+				<a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+				<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+				<span class="sr-only">Next</span>
+				</a>
+       </div>
+       <div name="buy-sale" class="col-md-3 buy-sale"> 
+         <a href="#"   target="_blank"><img src="img/public/mai1.png"/></a> 
+          <a href="#"  target="_blank" ><img src="img/public/mai1.png"/></a>    	   	
+       </div> 
+    </div>
+    <div name="recommend-features" class="recommend-features">
+      <div>
+          	<div name="dig-devices">
+      			<ul class="nav nav-tabs">
+      				<li role="presentation" class="active"><a href="#">数码设备</a></li>
+      			</ul>
+      			<br/>
+          	</div>
+          	<div>
+          		<ul class="goodslist">
+                <%for(var i=0;i< goodsSell.shuma.length;i++){%>
+          			<li>
+      					 <div class="goods">
+      					 	 <a href="/goods/detail<%=goodsSell.shuma[i]._id%>" target="_blank" >
+                                 <img src="/img/upload/<%=goodsSell.shuma[i].displayImage%>" width="100" height="125" />
+                                </a> 
+                               <p><%=goodsSell.shuma[i].Goodsname%></p>
+                               <p><span style="color:red;">￥</span><%=goodsSell.shuma[i].Goodsnewprice%>RMB</p>
+      					 </div>
+          			</li>
+                <%}%>
+          		</ul>
+              </div>   
+      </div>
+      <div>
+            <div name="dig-devices">
+            <ul class="nav nav-tabs">
+              <li role="presentation" class="active"><a href="#">知识书本</a></li>
+            </ul>
+            <br/>
+            </div>
+            <div>
+              <ul class="goodslist">
+                <%for(var i=0;i< goodsSell.book.length;i++){%>
+                <li>
+                 <div class="goods">
+                   <a href="/goods/detail<%=goodsSell.book[i]._id%>" target="_blank" >
+                    <img src="/img/upload/<%=goodsSell.book[i].displayImage%>" width="100" height="125" />
+                    </a> 
+                    <p><%=goodsSell.book[i].Goodsname%></p>
+                    <p><span style="color:red;">￥</span><%=goodsSell.book[i].Goodsnewprice%>RMB</p>
+                 </div>
+                </li>
+                <%}%>
+              </ul>
+              </div>   
+      </div>
+      <div>
+            <div name="dig-devices">
+            <ul class="nav nav-tabs">
+              <li role="presentation" class="active"><a href="#">动物宠物</a></li>
+            </ul>
+            <br/>
+            </div>
+            <div>
+              <ul class="goodslist">
+                <%for(var i=0;i< goodsSell.aniaml.length;i++){%>
+                <li>
+                 <div class="goods">
+                   <a href="/goods/detail<%=goodsSell.aniaml[i]._id%>" target="_blank" >
+                                 <img src="/img/upload/<%=goodsSell.aniaml[i].displayImage%>" width="100" height="125" />
+                                </a> 
+                               <p><%=goodsSell.aniaml[i].Goodsname%></p>
+                               <p><span style="color:red;">￥</span><%=goodsSell.aniaml[i].Goodsnewprice%>RMB</p>
+                 </div>
+                </li>
+                <%}%>
+              </ul>
+              </div>   
+      </div>
+    </div>
+</body>
+<!-- Mainly scripts -->
+<!-- <script src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js""></script>
+<script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+<script src="../js/jquery-3.3.1.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script>
+ 
+    //用ajax提交表单
+    $('#sugges').click(function () {
+        var username=$('#user').val();
+        var password=$('#password').val();
+        var age=$('#age').val();
+        var sex=$('#sex').val();
+        var hasGirlfriendorBoyfriend=$('#hasGirlfriendorBoyfriend').val();
+          $.ajax({
+                type: "post",
+                url: "/user/add",
+                dataType: "json",
+                data:{ "user": username, "password": password ,"hasGirlfriendorBoyfriend":hasGirlfriendorBoyfriend,"sex":sex,"age":age},
+                success: function(data){
+                //接受返回的数据，前端判断采取的动作
+                  if(data){
+                    if(data.message=="false"){
+                      alert('注册失败');
+                    }else{
+                      alert("注册成功");  
+                    }
+                  }else{
+                     alert('注册失败');
+                  }
+                }
+          });
+            }); 
+  
+
+</script>
+</html> 

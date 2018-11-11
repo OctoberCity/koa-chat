@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>亿突在线</title>
+   <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <meta name="keywords" content="Scott Jeremy" />
+
+</head>
+<style>
+    .background{
+      background-color:#f2f2f2;
+    }
+    .middle-box{
+        width:200px;
+        margin:0  auto;
+        padding-top:100px;
+    }
+</style>
+
+<body class="background">
+
+<div class="middle-box">
+    <div>
+        <h3>聊天室</h3>
+        <form class="mm" role="form" action="login.ejs">
+            <div class="form-group">
+                <input type="text" class="form-control" id="username" placeholder="请输入用户名" required="">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" id="password" placeholder="请输入注册密码" required="">
+            </div>
+
+            <input type="button" id="login" class="btn btn-lg btn-primary btn-block" value="登陆">
+        </form>
+    
+    </div>
+</div>
+
+<script src="../js/jquery2.1.4.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+
+<script>
+    //用ajax提交表单
+    $('#login').click(function () { 
+        var username=$('#username').val();
+        var  password=$('#password').val(); 
+        var dd={"username": username, "password": password}; 
+           $.ajax({
+                type: "POST",
+                url: "/user/Login",
+                dataType: "json",
+                data: dd,
+                // contentType : 'application/json',
+                success: function(data){ 
+                //接受返回的数据，前端判断采取的动作 
+                    if(data.status===0){
+                      alert(data);
+                    }else{
+                         window.localStorage.setItem('token', data.token);
+                         window.localStorage.setItem('token_exp', new Date().getTime()); 
+                         window.location.href="http://127.0.0.1:3000/chatList";
+                    }   
+                }
+          });
+
+    });
+</script>
+
+</body>
+
+</html>

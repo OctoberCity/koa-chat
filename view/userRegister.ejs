@@ -1,0 +1,167 @@
+ <!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> </title>
+<!-- 	<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+ -->		
+   <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <meta name="keywords" content="Scott Jeremy" />
+    <style>
+       a:hover{
+        cursor:pointer;
+       text-decoration: none;
+       }
+    	.header{
+    		background-color:#f2f2f2;
+    		width:100%;
+    		margin-bottom: 20px;
+    	}
+    	.header ul{
+    		padding:0 150px;
+    	    height:100px;
+    	}
+    	.header ul li{
+    		line-height: 100px;
+             }   
+         .middle-body{
+           padding:0 80px;
+         } 
+
+         /*头像样式*/
+       .headPortrait a{
+           text-decoration: none;
+           background-color: #f2f2f2;
+           color:#000;
+       }
+       .headPortrait a:link:visited{
+           text-decoration: none;
+           outline: #f2f2f2 solid 1px;
+       }    
+         
+    </style>
+</head>
+
+<body>
+    <div name="register-body" class="">
+			<form class="form-horizontal"   enctype="multipart/form-data"   method="POST" action="/user/register">
+				<div class=form-group>
+				      <p class=" text-center h4">you face</p>
+				      <div class="col-sm-12 headPortrait text-center">
+				         <img  src="img/public/head-default-Portrait.jpeg"  width="140" height="140" alt="你的头像思密达" class="img-circle" id="youHead"  />
+                 <div class="update-avator" style="bottom:-30px">
+                   <p>
+                  <a herf="javascript:void(0)" id="imgUpload" >上传头像</a>
+                  <input class="hide"  type="file"   title="上传头像" name="fileField" id="upload" accept="image/gif,image/jpeg,image/jpg,image/png"> 
+                   </p>
+                 </div>
+				      </div>
+				</div>  
+				<div class="form-group">
+					<label for="username" class="col-sm-3 control-label">用户名：</label>
+					<div class="col-sm-6">
+					  <input type="text" class="form-control" id="username"  name="username" placeholder="username/用户名">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="inputPassword3" class="col-sm-3 control-label">密码:</label>
+					<div class="col-sm-6">
+					  <input type="password" class="form-control" id="inputPassword3" name="password" placeholder="密码/Password">
+					</div>
+				</div>
+        
+         
+				 
+				<div class="form-group">
+					<div class="col-sm-offset-3 col-sm-9">
+					  <button type="submit" class="btn btn-default">注册</button>
+					</div>
+				</div>
+		</form>
+    </div>
+ 
+
+<!-- Modal模态框 -->
+ <!--  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel"></h4>
+        </div>
+        <div class="modal-body text-center">
+            <img  src="img/public/head-default-Portrait.jpeg"  id="head-face"  width="170" height="170" alt="你的头像思密达" class="img-circle"/>
+            <div>
+                  <form target="uploadtarget" action="postpic" method="post" enctype="multipart/form-data" >               
+                  <a herf="javascript:void(0)" id="imgUpload" >上传头像</a>
+                  <input class=" "  onchange="preCheckImage(this)" type="file" title="上传头像" name="fileField" id="upload" accept="image/gif,image/jpeg,image/jpg,image/png"> 
+            </div>           
+        </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          <button type="button" class="btn btn-primary">确定</button>
+        </div>
+      </div>
+    </div>
+  </div> -->
+</body>
+ 
+<!-- <script src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js""></script>
+<script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+<script src="../js/jquery2.1.4.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/fileuploadurl.js"></script>
+<script>
+     //对上传图片的按钮进行点击传递
+     $("#imgUpload").click(function(){
+          $("#upload").click();
+     });
+
+     //预览需要上传的图片
+      $("#upload").on("change",function(event){
+             var files = event.target.files,
+          reader = new FileReader();
+         if(files && files[0]){
+          reader.onload = function (ev) {
+           $('#youHead').attr('src', ev.target.result);
+          }
+          reader.readAsDataURL(files[0]);
+        }  
+      });
+
+
+
+
+
+    //用ajax提交表单
+    $('#sugges').click(function () {
+        var username=$('#user').val();
+        var password=$('#password').val(); 
+          $.ajax({
+                type: "post",
+                url: "/user/register",
+                dataType: "json",
+                data:{ "user": username, "password": password},
+                success: function(data){
+                //接受返回的数据，前端判断采取的动作
+                  if(data){
+                    if(data.message=="false"){
+                      alert('注册失败');
+                    }else{
+                      alert("注册成功");  
+                    }
+                  }else{
+                     alert('注册失败');
+                  }
+                }
+          });
+            }); 
+  
+
+</script>
+</html> 
+

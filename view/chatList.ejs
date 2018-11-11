@@ -1,0 +1,131 @@
+ <!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>亿突首页</title>
+<!-- 	<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+ -->		
+   <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <meta name="keywords" content="Scott Jeremy" />
+    <style>
+       a:hover{
+        cursor:pointer;
+       text-decoration: none;
+       }
+    	.header{
+    		background-color:#f2f2f2;
+    		width:100%;
+    		margin-bottom: 20px;
+    	}
+    	.header ul{
+    		padding:0 150px;
+    	    height:100px;
+    	}
+    	.header ul li{
+    		line-height: 100px;
+             }   
+         .middle-body{
+           padding:0 80px;
+         } 
+
+         /*头像样式*/
+       .headPortrait a{
+           text-decoration: none;
+           background-color: #f2f2f2;
+           color:#000;
+       }
+       .headPortrait a:link:visited{
+           text-decoration: none;
+           outline: #f2f2f2 solid 1px;
+       }    
+         
+    </style>
+</head>
+
+<body>
+    <div name="register-body" class="">
+			 
+		</form>
+    </div>
+</body>
+ 
+<!-- <script src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js""></script>
+<script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+<script src="../js/jquery2.1.4.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/fileuploadurl.js"></script>
+<script> 
+// 文档加载调用获取好友列表
+$(document).ready(function(){  
+ $.ajax({
+      type: "GET",
+      url: "/chat/getFriendList",
+      dataType: "json", 
+      headers: {
+        'Authorization':'Bearer '+ localStorage.getItem('token')
+      },
+      success: function(data){
+      //接受返回的数据，前端判断采取的动作
+        
+      }
+    });
+}); 
+ 
+// socketio监听所有连接上线用户
+
+
+// 监听好友上线列表
+
+
+//点击好友聊天，新开聊天页面，进行聊天
+
+
+
+//添加好友，点击在线用户列表添加成为好友
+    //用ajax提交表单
+    $('#sugges').click(function () {
+        var username=$('#user').val();
+        var password=$('#password').val(); 
+          $.ajax({
+                type: "post",
+                url: "/user/register",
+                dataType: "json",
+                data:{},
+                success: function(data){
+                //接受返回的数据，前端判断采取的动作
+                  if(data){
+                    if(data.message=="false"){
+                      alert('注册失败');
+                    }else{
+                      alert("注册成功");  
+                    }
+                  }else{
+                     alert('注册失败');
+                  }
+                }
+          });
+            }); 
+
+  //获取好友列表方法ajax刷新好友列表
+  function getFriendLsit(){
+  $.ajax({
+                type: "post",
+                url: "/user/add",
+                dataType: "json",
+                data:{},
+                success: function(data){
+                //接受返回的数据，前端判断采取的动作
+                 if(data){
+                // 拼凑好友列表 	
+                 }
+                }
+          });
+  }  
+  
+
+</script>
+</html> 
+

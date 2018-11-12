@@ -43,13 +43,14 @@
 <script src="../js/jquery-3.3.1.js"></script>
 <script src="../js/bootstrap.min.js"></script>
 	<script type="text/javascript">
-		window.onload=function(){
-    var socket = io.connect('http://localhost:3000');
+	window.onload=function(){
+     // 渲染聊天记录、、暂时从数据库中取，以后改从文件里取		
+   const socket = io.connect('http://127.0.0.1:3000');
 	socket.emit("join","<%=user.username%>","<%=user.headImageName%>");
 	socket.on("connect",function(){
 	document.getElementById("chat").style.display="block";
 	socket.on("announcement",function(mes){
-		var li =document.createElement("li");
+	const li =document.createElement("li");
 		    li.className="announcement";
 		    li.innerHTML=mes;
 		    document.getElementById("messages").append(li);
@@ -57,7 +58,7 @@
   });
 
 function addMessage(who ,text,img){
-	var li=document.createElement("li");
+const li=document.createElement("li");
 	li.className ="message"; 
 	if(who!="<%=user.username%>"){
        li.innerHTML="<img src='/img/public/lunbo1.jpg' class='img-circle discuss-user-img' style='width:50px;border-radius:25px'/>&nbsp;&nbsp<span style='background-color:#008cc8;border-radius:5px;padding:5px 10px'>"+text+"</span>";
@@ -69,16 +70,15 @@ function addMessage(who ,text,img){
 	return li;
 }
 
-var input=document.getElementById("input");
 document.getElementById("form").onsubmit =function(){ 
-   var li =addMessage("<%=user.username%>",input.value,"<%=user.headImageName%>");
+  const input=document.getElementById("input");
+  const li =addMessage("<%=user.username%>",input.value,"<%=user.headImageName%>");
    socket.emit("text",input.value,function(date){
-   	var p=document.createElement("span");//时间戳//消息接受到的情况进行比对
+   const p=document.createElement("span");//时间戳//消息接受到的情况进行比对
    	p.innerHTML="&nbsp;&nbsp==>"+date;
    	p.style.color="#f2f2f2";
     li.append(p);
    });
-
 	//因为是广播，所以重置这个框
 	input.value=""; 
     input.focus();

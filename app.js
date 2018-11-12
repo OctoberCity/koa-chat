@@ -92,8 +92,11 @@ app.use(route.post('/user/Login',people.dologin));//插入操作
 //用户注册
 app.use(route.post('/user/register',people.registerPeople));//插入操作
 
-//渲染聊天列表页面聊天
+ //获得好友列表
 app.use(route.get('/chat/getFriendList',people.chatPeopleList));
+
+//添加好友操作
+app.use(route.post('/chat/addFriend',people.addChatFriend));
 
 const server=app.listen(3000,function(){console.log("服务已经启动")});
 
@@ -103,7 +106,7 @@ io.sockets.on("connection",function(socket){
    socket.on("join",function(name,img){ 
       socket.nickname=name;
       socket.headImage=img;
-      socket.broadcast.emit("announcement",name+"join this chat");
+      socket.broadcast.emit("peopleOnline",{id,username,image});
    });
    socket.on("text",function(mes,fn){
     socket.broadcast.emit("text",socket.nickname,mes,socket.headImage);

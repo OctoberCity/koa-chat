@@ -3,7 +3,7 @@ var mongoose=require("mongoose");
 var safe = { w: "majority", wtimeout: 10000 };
 
 var peopleSchema=new mongoose.Schema({ 
-	_id:mongoose.Schema.Types.ObjectId,
+	id:Number,
 	username:String,
 	password:String,
 	friendArray:{type:Array,default:[]},//好友id
@@ -11,6 +11,9 @@ var peopleSchema=new mongoose.Schema({
 	headImageName:{type:String,default:"head-default-Portrait.jpeg"}
 },{safe:safe});
  
+ 
+
+
 peopleSchema.set('toObject', { getters: true }); 
 
 //通过草稿建造模型peoplemodule

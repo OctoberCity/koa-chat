@@ -9,6 +9,7 @@
 <!-- 	<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
  -->		
    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <script src="js/socket.io/socket.io.js"></script>
     <meta name="keywords" content="Scott Jeremy" />
     <style>
        a:hover{
@@ -42,8 +43,7 @@
            outline: #f2f2f2 solid 1px;
        }    
        .bor{
-        border:2px solid #000; 
-        height:100px;
+        border:1px solid #000;
        }  
        .friendItem{
         border-radius: 3px;
@@ -54,14 +54,17 @@
 <body>
 <div class='col-md-4 bor'>
      <h3>好友列表</h3>
-     <div id="friendList">
-        <p class="friendItem">
-          <img src="img/public/head-default-Portrait.jpeg"  height='40px' width='40px' class="img-circle bor"  style="display: inline-block;" />
-          <div style="display: inline-block;" class="bor">
-           <p>username</p>
-           <p>部分说话内容</p> 
-          </div>
+     <div id="friendList" >
+  <!--       <p class="friendItem "  onclick="chatWithFriend(this)" >  
+          <input type="hidden" name="id" value="ididididdidi" />
+          <img src="img/public/head-default-Portrait.jpeg"  height='40px' width='40px' class="img-circle " />
+          <span>usernameaaa</span><br> 
         </p>
+            <p class="friendItem "  onclick="chatWithFriend(this)" >  
+          <input type="hidden" name="id" value="ididididdidi" />
+          <img src="img/public/head-default-Portrait.jpeg"  height='40px' width='40px' class="img-circle " />
+          <span>usernameaaa</span><br> 
+        </p> -->
      </div>
 </div>
 <div class="col-md-2 "></div>
@@ -79,6 +82,7 @@
 <script> 
 const friendList = $("#friendList");
 const onlineList = $("#onlineList");
+ const socket = io.connect('http://127.0.0.1:3000');
 
 // 文档加载调用获取好友列表,
 $(document).ready(function(){  
@@ -86,19 +90,34 @@ $(document).ready(function(){
 }); 
  
 // socketio监听所有连接上线用户
+socket.on('peopleOnline',(user)=>{
+ console.log("有人上线了,看！在池子里面");
+ listenUserOnline(user);
+});
+
+//添加用户上线池
+function listenUserOnline(userOnline){
+  const user="<p class='friendItem'  onclick='chatWithFriend(this)' ><input type='hidden' name='id' value='"+userOnline.id+"' /><img src='upload/"+userOnline.src+"'  height='40px' width='40px' class='img-circle' /><span>"+userOnline.username+"</span><br></p>";
+  $().appendTo(onlineList);
+}
+ 
 
 
-// 监听好友上线列表
-
-
-//点击好友聊天，新开聊天页面，进行聊天
-
+//点击好友聊天，新开聊天页面，进行聊天 
+  function chatWithFriend(obj){
+    const objIt  =obj.children;
+    const id = objIt[0].value;
+    const src= objIt[1].src;
+    const username =objIt[2].innerHTML;
+    //下面挑转聊天页面，也可以使用window.location.href带参数跳转
+    window.location.href="http://127.0.0.1:3000/chat?id="+id+"&src="+src+"&username="+username;
+   }
 
 
  
 
   //获取好友列表方法ajax刷新好友列表
-  function getFriendLsit(){
+  function getFriendList(){
   $.ajax({
       type: "GET",
       url: "/chat/getFriendList",
@@ -107,8 +126,14 @@ $(document).ready(function(){
         'Authorization':'Bearer '+ localStorage.getItem('token')
       },
       success: function(data){
-      //接受返回的数据，前端判断采取的动作
-        
+      //接受返回的数据，前端判断采取的动作 
+        if(data.length >0){ 
+          data.forEach((item,index)=>{
+               $("<p class='friendItem'  onclick='chatWithFriend(this)' ><input type='hidden' name='id' value='"+item.id+"' /><img src='upload/"+item.src+"'  height='40px' width='40px' class='img-circle' /><span>"+item.username+"</span><br></p>").appendTo(friendList);
+             }); 
+        }else if(data.length===0){ 
+          $("<p>你还是一个人，暂时没有朋友，快到右侧的在线列表添加好友把 </p>").appendTo(friendList);
+        }
       }
     });
   }  

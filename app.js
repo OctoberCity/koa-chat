@@ -15,7 +15,7 @@ const util = require('util')
 const verify = util.promisify(jwt.verify) // 解密
 const  staticServer = require('koa-static'); 
 
-const allowPath=  ['/','/login','/register','/user/Login','/user/register','/chatList']; //数组中的路径不需要通过jwt验证
+const allowPath=  ['/','/login','/register','/user/Login','/user/register','/chatList','/chat' ]; //数组中的路径不需要通过jwt验证
 app.use(staticServer(path.join(__dirname,'public'))); 
 /*JWT*/
 //验证头部是否有token
@@ -43,12 +43,9 @@ app.use(koaBody({
   }
 })); 
 
-
-
-
 //jwt解密 
  app.use(async(ctx,next)=>{ 
-   const reqPath =ctx.path;
+   const reqPath =ctx.path; 
    if(allowPath.indexOf(reqPath)<0){
      const params={};
      const token = ctx.request.header.authorization; 
@@ -61,7 +58,9 @@ app.use(koaBody({
  });
  
 //ejs模板渲染
-app.use(views('view',{extension:'ejs'}));
+app.use(views(__dirname + '/view', {
+  extension: 'ejs'
+}))
 
 //登录
 app.use(route.get('/',async(ctx)=>{ 
@@ -78,8 +77,8 @@ app.use(route.get('/chatList',async(ctx)=>{
 	 await ctx.render('chatList',{})
 }));
 //聊天窗口
-app.use(route.get('/chat',async(ctx)=>{ 
-	 await ctx.render('chat',{})
+app.use(route.get('/chat',async(ctx)=>{
+	 await ctx.render('chat', ctx.query)
 }));
 
 
@@ -101,15 +100,24 @@ app.use(route.post('/chat/addFriend',people.addChatFriend));
 const server=app.listen(3000,function(){console.log("服务已经启动")});
 
 
-var io = sio.listen(server);  
+var io = sio.listen(server); 
+var chatUserlist =[]; 
 io.sockets.on("connection",function(socket){
-   socket.on("join",function(name,img){ 
-      socket.nickname=name;
-      socket.headImage=img;
-      socket.broadcast.emit("peopleOnline",{id,username,image});
+   socket.on("join",function(user){ 
+   chatUserlist.push(user);
+   //发射某人上线
+   socket.broadcast.emit("peopleOnline",user);
    });
-   socket.on("text",function(mes,fn){
-    socket.broadcast.emit("text",socket.nickname,mes,socket.headImage);
-    fn(Date.now());
+   socket.on("text",function(params,fn){
+    //TODO 插入数据库
+    console.log("数据插入数据库");
+    const resMessage={
+           receiverId:params.receiver,
+           senderId :params.senderId,
+           message: params.message, 
+           senderSrc :params.senderSrc  
+    };
+    socket.broadcast.emit("resMessage",resMessage);
+    fn({status:'1001'});
    });
 });

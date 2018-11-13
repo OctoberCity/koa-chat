@@ -63,6 +63,8 @@
                     }else{
                          window.localStorage.setItem('token', data.token);
                          window.localStorage.setItem('token_exp', new Date().getTime()); 
+                         window.localStorage.setItem('id',data.id);
+                         window.localStorage.setItem('src',data.src);
                          window.location.href="http://127.0.0.1:3000/chatList";
                     }   
                 }

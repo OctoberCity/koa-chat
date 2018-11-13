@@ -4,6 +4,7 @@
 		<title>Socket.IO.chat</title>
 		<script src="js/socket.io/socket.io.js"></script>
         <!-- <script src="js/chat.js"></script> -->
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href=""/>
         <style >
            .bg{
@@ -17,79 +18,105 @@
            #messages{
            	padding-bottom: 30px;
            	list-style-type:none;
-           }
-           .message{
-           	padding-bottom: 20px;
-           }
-           .you{
-             
+           } 
+           .friend{
+            padding: 20px 20px 0px;
+            clear: both;  
            }
            .me{
-
+             padding: 10px 0px;
+             clear: both; 
+            }
+           /**头部*/
+           .chat_header{
+            background-color: #3CB7FA;
+            text-align: center;
+            height:30px;
+            font-size: 30px;
+            color: #fff;
            }
+
+
         </style>
 	</head>
 	<body class="bg">
+     <div class='chat_header'><%=username%></div>
+     <input type="hidden" name="fId" value='<%=id%>'>
+     <input type="hidden" name="fsrc" value='<%=src%>'>
+
+
+
       <div id="chat">
 			 <ul id="messages"></ul>
-			 <form id="form">
-			 	<input type="text" name="message" id="input"/>
-			 	<button>send</button>
-			 </form>
+			 <div id="form"> 
+           <input type="email" class="form-control" id="inputMessage" placeholder="客观这里输入你话。。。。。"> 
+			 	<button id="submit">send</button>
+			 </div>
 		</div>
     
 		</div>
 	</body>
-<script src="../js/jquery-3.3.1.js"></script>
+<script src="../js/jquery2.1.4.js"></script>
 <script src="../js/bootstrap.min.js"></script>
 	<script type="text/javascript">
+    const fId = '<%= id %>';
+    const fSrc = '<%= src %>';
+    const socket = io.connect('http://127.0.0.1:3000');
+
 	window.onload=function(){
-     // 渲染聊天记录、、暂时从数据库中取，以后改从文件里取		
-   const socket = io.connect('http://127.0.0.1:3000');
-	socket.emit("join","<%=user.username%>","<%=user.headImageName%>");
+    //渲染聊天记录，现在是从数据库1取，以后从本地取
+    renderChatList();
+  }
+
+      
+ //监听socket的连接
 	socket.on("connect",function(){
 	document.getElementById("chat").style.display="block";
-	socket.on("announcement",function(mes){
-	const li =document.createElement("li");
-		    li.className="announcement";
-		    li.innerHTML=mes;
-		    document.getElementById("messages").append(li);
-	});
+	socket.on("resMessage",function(resMessage){
+    if(resMessage.id=== fId){
+       addMessage("friend",fSrc,resMessage.message);
+       } 
+    });
   });
 
-function addMessage(who ,text,img){
-const li=document.createElement("li");
-	li.className ="message"; 
-	if(who!="<%=user.username%>"){
-       li.innerHTML="<img src='/img/public/lunbo1.jpg' class='img-circle discuss-user-img' style='width:50px;border-radius:25px'/>&nbsp;&nbsp<span style='background-color:#008cc8;border-radius:5px;padding:5px 10px'>"+text+"</span>";
-	}else{
-		li.innerHTML="<img src='/img/public/lunbo2.jpg' class='img-circle discuss-user-img' style='width:50px;border-radius:25px'/>&nbsp;&nbsp<span style='background-color:#fff;border-radius:5px;padding:5px 10px'>"+text+"</span>";
-	}
-	
-	document.getElementById("messages").appendChild(li);
-	return li;
-}
-
-document.getElementById("form").onsubmit =function(){ 
-  const input=document.getElementById("input");
-  const li =addMessage("<%=user.username%>",input.value,"<%=user.headImageName%>");
-   socket.emit("text",input.value,function(date){
-   const p=document.createElement("span");//时间戳//消息接受到的情况进行比对
-   	p.innerHTML="&nbsp;&nbsp==>"+date;
-   	p.style.color="#f2f2f2";
-    li.append(p);
-   });
-	//因为是广播，所以重置这个框
-	input.value=""; 
-    input.focus();
-    return false;
-};
  
 
+	//点击发送消息
+ $('#submit').on('click',()=>{  
+   const message=$("#inputMessage").val();
+   const params = {};
+   params.message = message;
+   params.senderId = window.localStorage.getItem("id");
+   params.senderSrc =window.localStorage.getItem("src");
+   params.receiver = fId;
+   socket.emit("text",params,function(res){
+     if(res.status=== '1001'){//如果插入数据库成功
+       addMessage('me',localStorage.getItem("src"),message);
+     }
+   });
+  //重置这个框,起到一个发送的效果
+    $("#inputMessage").val('');
+   });
 
-socket.on("text",addMessage);
+//添加聊天内容至页面
+function addMessage(who,src,text){ 
+  const li=document.createElement("li");
+  li.className ="message"; 
+  if(who === 'me'){
+       li.className ="me"; 
+       li.innerHTML="<img src='http://127.0.0.1:3000/upload/"+src+"' class='img-circle discuss-user-img' style='width:50px;border-radius:25px;'/>&nbsp;&nbsp<span style='background-color:#008cc8;border-radius:5px;padding:5px 10px'>"+text+"</span>";
+  }else{
+      li.className ="friend"; 
+      li.innerHTML="<img src='http://127.0.0.1:3000/upload/"+src+"' class='img-circle discuss-user-img' style='width:50px;border-radius:25px;float:right'/><span style='margin-top:10px;background-color:#008cc8;border-radius:5px;padding:5px 10px;float:right;margin-right:20px'>"+text+"</span>";
+  } 
+  document.getElementById("messages").appendChild(li); 
+}   
+
+function renderChatList(){
+
 }
-		
+
+
 	</script>
 </html>
 

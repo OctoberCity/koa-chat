@@ -8,6 +8,7 @@
 
     <title>boss聊天</title>
    <link rel="stylesheet" href="../css/bootstrap.min.css">
+   <script src="js/socket.io/socket.io.js"></script>
     <meta name="keywords" content="Scott Jeremy" />
 
 </head>
@@ -44,7 +45,9 @@
 <script src="../js/jquery2.1.4.js"></script>
 <script src="../js/bootstrap.min.js"></script>
 
+
 <script>
+    const socket = io.connect('http://127.0.0.1:3000');
     //用ajax提交表单
     $('#login').click(function () { 
         var username=$('#username').val();
@@ -61,6 +64,8 @@
                     if(data.status===0){
                       alert(data);
                     }else{
+                         //添加登录事件，告诉服务器我登录了
+                         socket.emit("join",{id:data.id,src:data.src,username:data.username});
                          window.localStorage.setItem('token', data.token);
                          window.localStorage.setItem('token_exp', new Date().getTime()); 
                          window.localStorage.setItem('id',data.id);

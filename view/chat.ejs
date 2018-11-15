@@ -70,16 +70,14 @@
 
       
  //监听socket的连接
-	socket.on("connect",function(){
-	document.getElementById("chat").style.display="block";
-	socket.on("resMessage",function(resMessage){
-    if(resMessage.id=== fId){
+	socket.on("resMessage",(resMessage)=>{ 
+     //如果是id等于自己在缓存里存的自己的id,代表发的消息是给自己的
+    if(resMessage.receiverId === window.localStorage.getItem("id")){
        addMessage("friend",fSrc,resMessage.message);
        } 
     });
-  });
-
  
+
 
 	//点击发送消息
  $('#submit').on('click',()=>{  
@@ -90,11 +88,11 @@
    params.senderSrc =window.localStorage.getItem("src");
    params.receiver = fId;
    socket.emit("text",params,function(res){
-     if(res.status=== '1001'){//如果插入数据库成功
-       addMessage('me',localStorage.getItem("src"),message);
-     }
-   });
-  //重置这个框,起到一个发送的效果
+         if(res.status=== '1001'){//如果插入数据库成功
+           addMessage('me',localStorage.getItem("src"),message);
+         }
+     });
+    //重置这个框,起到一个发送的效果
     $("#inputMessage").val('');
    });
 
@@ -103,15 +101,17 @@ function addMessage(who,src,text){
   const li=document.createElement("li");
   li.className ="message"; 
   if(who === 'me'){
-       li.className ="me"; 
+       li.className ="friend"; 
        li.innerHTML="<img src='http://127.0.0.1:3000/upload/"+src+"' class='img-circle discuss-user-img' style='width:50px;border-radius:25px;'/>&nbsp;&nbsp<span style='background-color:#008cc8;border-radius:5px;padding:5px 10px'>"+text+"</span>";
   }else{
-      li.className ="friend"; 
-      li.innerHTML="<img src='http://127.0.0.1:3000/upload/"+src+"' class='img-circle discuss-user-img' style='width:50px;border-radius:25px;float:right'/><span style='margin-top:10px;background-color:#008cc8;border-radius:5px;padding:5px 10px;float:right;margin-right:20px'>"+text+"</span>";
+      li.className ="me"; 
+      li.innerHTML="<img src='"+src+"' class='img-circle discuss-user-img' style='width:50px;border-radius:25px;float:right'/><span style='margin-top:10px;background-color:#008cc8;border-radius:5px;padding:5px 10px;float:right;margin-right:20px'>"+text+"</span>";
   } 
   document.getElementById("messages").appendChild(li); 
 }   
 
+
+//渲染聊天内容
 function renderChatList(){
 
 }

@@ -82,14 +82,16 @@
 <script> 
 const friendList = $("#friendList");
 const onlineList = $("#onlineList");
- const socket = io.connect('http://127.0.0.1:3000');
+const socket = io.connect('http://127.0.0.1:3000');
 
 // 文档加载调用获取好友列表,
 $(document).ready(function(){  
     getFriendList();
+    getAllOnlineUser();
 }); 
  
-// socketio监听所有连接上线用户
+
+// socketio监听所有连接上线用户，只要有人上线就添加
 socket.on('peopleOnline',(user)=>{
  console.log("有人上线了,看！在池子里面");
  listenUserOnline(user);
@@ -97,8 +99,8 @@ socket.on('peopleOnline',(user)=>{
 
 //添加用户上线池
 function listenUserOnline(userOnline){
-  const user="<p class='friendItem'  onclick='chatWithFriend(this)' ><input type='hidden' name='id' value='"+userOnline.id+"' /><img src='upload/"+userOnline.src+"'  height='40px' width='40px' class='img-circle' /><span>"+userOnline.username+"</span><br></p>";
-  $().appendTo(onlineList);
+  const user="<p class='friendItem'  onclick='addFriend(this)' ><input type='hidden' name='id' value='"+userOnline.id+"' /><img src='upload/"+userOnline.src+"'  height='40px' width='40px' class='img-circle' /><span>"+userOnline.username+"</span><br></p>";
+  $(user).appendTo(onlineList);
 }
  
 
@@ -127,9 +129,10 @@ function listenUserOnline(userOnline){
       },
       success: function(data){
       //接受返回的数据，前端判断采取的动作 
+      console.log(data);
         if(data.length >0){ 
           data.forEach((item,index)=>{
-               $("<p class='friendItem'  onclick='chatWithFriend(this)' ><input type='hidden' name='id' value='"+item.id+"' /><img src='upload/"+item.src+"'  height='40px' width='40px' class='img-circle' /><span>"+item.username+"</span><br></p>").appendTo(friendList);
+               $("<p class='friendItem'  onclick='chatWithFriend(this)' ><input type='hidden' name='id' value='"+item.id+"' /><img src='"+item.friendImage+"'  height='40px' width='40px' class='img-circle' /><span>"+item.friendName+"</span><br></p>").appendTo(friendList);
              }); 
         }else if(data.length===0){ 
           $("<p>你还是一个人，暂时没有朋友，快到右侧的在线列表添加好友把 </p>").appendTo(friendList);
@@ -138,13 +141,30 @@ function listenUserOnline(userOnline){
     });
   }  
   
+  //获取所有在线的用户
+  function getAllOnlineUser(){
+  socket.emit('getAllOnlineUser',(userList)=>{ 
+     userList.forEach((item,index)=>{
+       listenUserOnline(item);
+     });
+  });
+     
+  } 
 
   //添加好友
-  function addFriend(){
+  function addFriend(obj){
+  const objIt  =obj.children;
+  const id = objIt[0].value;
+  const src= objIt[1].src;
+  const username =objIt[2].innerHTML;
+  const isAddFriend=confirm("你确定添加"+username+"为你的好友吗？");
+  if(!isAddFriend){
+    return false;
+  }
   const data = {};
-  data.friendId = friendId;
-  data.image = image;   
-  data.username = username;
+  data.friendId = id;
+  data.friendImage = src;   
+  data.friendName = username; 
   $.ajax({
       type: "POST",
       url: "/chat/addFriend",
@@ -155,7 +175,9 @@ function listenUserOnline(userOnline){
       },
       success: function(data){
       //接受返回的数据，前端判断采取的动作
-        
+        if(data&&data.status === 1001){
+          $("<p class='friendItem'  onclick='chatWithFriend(this)' ><input type='hidden' name='id' value='"+id+"' /><img src='"+src+"'  height='40px' width='40px' class='img-circle' /><span>"+username+"</span><br></p>").appendTo(friendList);
+        }
       }
     });
   }  

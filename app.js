@@ -1,6 +1,6 @@
 const koa =require("koa");
 const path=require("path");
-var sio = require('socket.io');  
+const sio = require('socket.io');  
 const app = new koa();
 const mongoose=require("mongoose");
 const jwt = require('jsonwebtoken');
@@ -52,6 +52,7 @@ app.use(koaBody({
      const  payload = await verify(token.split(' ')[1], "hjwscrazy");
      params.username=payload.username;
      params.id=payload.id;
+     params.src =payload.src;
      ctx.request.userInfo=params;
    } 
     await next();
@@ -105,9 +106,20 @@ var chatUserlist =[];
 io.sockets.on("connection",function(socket){
    socket.on("join",function(user){ 
    chatUserlist.push(user);
+   console.log("进池子的人有多少个",chatUserlist.length);
    //发射某人上线
    socket.broadcast.emit("peopleOnline",user);
    });
+   
+
+   //返回所有在线的用户给客户端
+  socket.on("getAllOnlineUser",(fn)=>{
+    fn(chatUserlist);
+  });
+   
+
+
+   //接受并发送用户发的消息
    socket.on("text",function(params,fn){
     //TODO 插入数据库
     console.log("数据插入数据库");
@@ -118,6 +130,9 @@ io.sockets.on("connection",function(socket){
            senderSrc :params.senderSrc  
     };
     socket.broadcast.emit("resMessage",resMessage);
+    //返回给客户端发送消息操作是否成功
     fn({status:'1001'});
    });
+
+
 });
